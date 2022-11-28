@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +11,10 @@ namespace Server
 {
     internal class Program
     {
+        public static string message = "";
         public static void SendData(object client)
         {
             Socket clientSocket = (Socket)client;
-            string message = "";
             do
             {
                 message = (string)Console.ReadLine();
@@ -26,13 +26,12 @@ namespace Server
         public static void ReceiveData(object client)
         {
             Socket clientSocket = (Socket)client;
-            string message = "";
             
-            while(message.ToLower() != "thoat")
+            while (message.ToLower() != "thoat")
             {
                 byte[] receive = new byte[1024];
-                clientSocket.Receive(receive);
-                message = ASCIIEncoding.ASCII.GetString(receive);
+                int len = clientSocket.Receive(receive);
+                message = ASCIIEncoding.ASCII.GetString(receive, 0, len);
                 Console.WriteLine("<client>: " + message);
             }
 
@@ -56,7 +55,7 @@ namespace Server
                 t1.Start(clientSocket);
                 t2.Start(clientSocket);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
